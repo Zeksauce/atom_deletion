@@ -1,0 +1,141 @@
+# input file for producing initial structure without relaxation
+
+# initial settings
+units metal
+dimension 3
+boundary p p p
+atom_style charge
+# atom_modify map array 
+
+# variable size equal 20         # model size
+# variable latparam equal 3.50   # initial lattice parameter
+
+# variables
+variable latparam equal 3.945
+variable scale equal sqrt(145)
+variable nx equal 14
+variable ny equal 1
+variable nz equal 4
+
+variable xmin equal 0
+variable xmax equal "v_nx*v_scale*v_latparam"
+variable ymin equal "-v_ny*v_scale*v_latparam"
+variable ymax equal "v_ny*v_scale*v_latparam"
+variable zmin equal 0 
+variable zmax equal "v_nz*v_latparam"
+
+variable xcenter equal "(v_xmin+v_xmax)/2"
+variable ycenter equal "(v_ymin+v_ymax)/2"
+variable zcenter equal "(v_zmin+v_zmax)/2"
+
+variable disp_x equal "v_latparam*v_scale*0.0"
+variable disp_z equal "v_latparam*0.0"
+# print "${disp}"
+
+region whole block ${xmin} ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box 
+create_box 3 whole 
+
+region lower block INF INF ${ymin} ${ycenter} INF INF units box
+
+lattice custom 1 &
+        orient x 22 -8 0 orient y 8 22 0 orient z 0 0 1 &
+        a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
+        basis 0 0 0 &
+        basis 0.5 0.5 0.5 &
+        basis 0.0 0.5 0.5 &
+        basis 0.5 0.0 0.5 &
+        basis 0.5 0.5 0.0 
+                           
+create_atoms 1 region lower &
+               basis 1 1 &
+               basis 2 2 &
+               basis 3 3 &
+               basis 4 3 &
+               basis 5 3
+
+region upper block INF INF ${ycenter} ${ymax} INF INF units box
+ 
+lattice custom 1 &
+        orient x 22 8 0 orient y -8 22 0 orient z 0 0 1 &
+        a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
+        basis 0 0 0 &
+        basis 0.5 0.5 0.5 &
+        basis 0.0 0.5 0.5 &
+        basis 0.5 0.0 0.5 &
+        basis 0.5 0.5 0.0
+ 
+create_atoms 1 region upper &
+               basis 1 1 &
+               basis 2 2 &
+               basis 3 3 &
+               basis 4 3 &
+               basis 5 3
+
+# substitute one type of atom with another type of atom, can be used to create multi-components system
+
+group lower region lower
+group upper region upper
+
+displace_atoms lower move ${disp_x} 0 0 units box
+displace_atoms lower move 0 0 ${disp_z} units box
+
+# rotate around y axis
+variable angle equal 0 # <angle>
+displace_atoms lower rotate ${xcenter} ${ycenter} ${zcenter} 0 1 0 ${angle} # 0.34
+displace_atoms upper rotate ${xcenter} ${ycenter} ${zcenter} 0 1 0 -${angle}
+
+# read data
+# read_data ../../model/bicrystal.lmp
+# read_data SrTiO3_npt.data
+
+mass 1 87.62000000    # Sr
+mass 2 47.86700000    # Ti 
+mass 3 15.99900000    # O 
+
+set type 1 charge 1.2
+set type 2 charge 2.4
+set type 3 charge -1.2
+
+# potential settings (required but not important)
+
+pair_style lj/cut 2.5
+pair_coeff * * 1 1
+
+# delete overlap atoms
+variable cutoff equal 1.0 # <cutoff>
+delete_atoms overlap ${cutoff} lower upper
+
+# reset ion charges
+group negative type 3
+group positive subtract all negative
+variable totalCharge equal charge(all)
+variable numofpositive equal count(positive)
+variable numofnegative equal count(negative)
+variable positiveCharge equal "0.5*v_totalCharge/v_numofpositive"
+variable negativeCharge equal "0.5*v_totalCharge/v_numofnegative"
+variable charge1 equal "1.2-v_positiveCharge"
+variable charge2 equal "2.4-v_positiveCharge"
+variable charge3 equal "-1.2-v_negativeCharge"
+
+print "----------charge information------------"
+print "total charge is now ${totalCharge}"
+print "positive charge is now ${positiveCharge}"
+print "negative charge is now ${negativeCharge}"
+print "charge1 is now ${charge1}"
+print "charge2 is now ${charge2}"
+print "charge3 is now ${charge3}"
+
+variable num_of_atoms equal count(all)
+
+print "${cutoff} ${charge1} ${charge2} ${charge3} ${num_of_atoms}" append charge.txt
+
+set type 1 charge ${charge1}
+set type 2 charge ${charge2}
+set type 3 charge ${charge3}
+
+write_data SrTiO3_${cutoff}_${angle}.data nocoeff
+
+# dump 1 all custom 20000 SrTiO3_min_1.8.dump.* id type q x y z
+# dump_modify 1 sort id
+# min_style cg
+# minimize  1e-25 1e-25 20000 20000
