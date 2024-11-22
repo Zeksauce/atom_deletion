@@ -13,7 +13,7 @@ atom_style charge
 # variables
 variable latparam equal 3.945
 variable scale equal sqrt(145)
-variable nx equal 14		# keep same x length
+variable nx equal 8		# keep same x length
 variable ny equal 1		# changed from 3
 variable nz equal 4		# z thickness to 4
 
@@ -102,7 +102,7 @@ pair_style lj/cut 2.5
 pair_coeff * * 1 1
 
 # delete overlap atoms
-variable cutoff equal 0 # <cutoff>
+variable cutoff equal 0.5 # <cutoff>
 delete_atoms overlap ${cutoff} lower upper
 
 # reset ion charges

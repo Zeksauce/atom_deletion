@@ -1,10 +1,24 @@
+"""Module for changing the 1 degree angle"""
+
 from pathlib import Path
 import pandas as pd
 
 
 class AtomDeleter:
-    def __init__(self, path=r"C:1.2.5 cutoff\1\SrTiO3_0.5_0.data"):
+    """Class for making an atom dleter of a selected file"""
+
+    def __init__(
+        self,
+        path=r"C:1.2.5 cutoff\1\SrTiO3_0.5_0.data",
+        output = r"1.2.5 cutoff\1\SrTiO3_0.5_0.txt",
+        remove_areas=[
+            (195.3, 1.9897, 1.9552, 0.25952),
+            (473.5, 451.7, 1.96, 1.76),
+            (420.162, 226.86, 1.96, 0.259),
+        ],
+    ):
         self.file = Path(path)
+        self.output = Path(output)
         self.head = pd.read_csv(self.file, delimiter=" ", nrows=10)
         df = self.head
         insert_rows = [9, 6, 5, 2, 0]
@@ -33,23 +47,40 @@ class AtomDeleter:
             "z_velocity",
         ]
         self.atom_data = self.atom_data.drop(columns=["index"])
+        self.remove_areas = remove_areas
 
     def main(self):
-        self.remove_atom()
+        """Main execution sequence"""
+        for x in self.remove_areas:
+            self.remove_atom_range(*x)
         self.save()
 
-    def remove_atom(self):
+    def remove_atom_range(self, x_max: float, x_min: float, y_max: float, y_min: float):
+        """Removes the range of atoms specified
+
+        Args:
+            x_max (float): x max value
+            x_min (float): x min value
+            y_max (float): y max value
+            y_min (float): y min value
+        """
+
         atom_data = self.atom_data
         self.atom_data = atom_data[
             ~(
-                (atom_data["x"] > 1.9897)
-                & (atom_data["x"] < 195.3)
-                & (atom_data["y"] < 1.9552)
-                & (atom_data["y"] > 0.25952)
+                (atom_data["x"] > x_min)
+                & (atom_data["x"] < x_max)
+                & (atom_data["y"] < y_max)
+                & (atom_data["y"] > y_min)
             )
         ]
 
-    def save(self, name=r"1.2.5 cutoff\1\SrTiO3_0.5_000.data"):
+    def save(self):
+        """Modifies and formats back into a data file
+
+        Args:
+            name (regexp, optional): file to save to.
+        """
         y = self.head.columns[0:9]
         b = self.atom_data.reset_index(drop=True)
         b.index = b.index + 1
@@ -59,7 +90,7 @@ class AtomDeleter:
         x = pd.concat(
             [self.head, b],
         )
-        x.to_csv(name, sep=" ", index=False, header=True)
+        x.to_csv(self.output, sep=" ", index=False, header=True)
 
 
 if __name__ == "__main__":
