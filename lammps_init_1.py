@@ -9,7 +9,7 @@ class AtomDeleter:
 
     def __init__(
         self,
-        path=r"C:1.2.5 cutoff\1\SrTiO3_0.5_0.data",
+        path=r"1.2.5 cutoff\1\SrTiO3_0.5_0.data",
         output = r"1.2.5 cutoff\1\SrTiO3_0.5_0.txt",
         remove_areas=[
             (195.3, 1.9897, 1.9552, 0.25952),
