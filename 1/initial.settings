@@ -6,22 +6,22 @@ dimension 3
 boundary p p p
 atom_style charge
 
-# Variables
+# variables
 variable latparam equal 3.945
 variable scale equal sqrt(145)
-variable nx equal 8
-variable ny equal 1
-variable nz equal 4
+variable nx equal 5		# keep same x length
+variable ny equal 1		# changed from 3
+variable nz equal 2		# z thickness to 4
 
 variable xmin equal 0
 variable xmax equal "v_nx*v_scale*v_latparam"
-variable ymin equal "-v_ny*v_scale*v_latparam"
+variable ymin equal "-3*v_ny*v_scale*v_latparam"  # Tripled ymin
 variable ymax equal "v_ny*v_scale*v_latparam"
 variable zmin equal 0 
 variable zmax equal "v_nz*v_latparam"
 
 variable xcenter equal "(v_xmin+v_xmax)/2"
-variable ycenter equal "(v_ymin+v_ymax)/2"
+variable ycenter equal 0		       # Updated ycenter
 variable zcenter equal "(v_zmin+v_zmax)/2"
 
 variable disp_x equal "v_latparam*v_scale*0.0"
@@ -30,40 +30,40 @@ variable disp_z equal "v_latparam*0.0"
 region whole block ${xmin} ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box 
 create_box 3 whole 
 
-# Create lower region
 region lower block INF INF ${ymin} ${ycenter} INF INF units box
-lattice custom 1 orient x 1 0 0 orient y 0 1 0 orient z 0 0 1 & 
-        a1 ${latparam} 0 0 & 
-        a2 0 ${latparam} 0 & 
-        a3 0 0 ${latparam} & 
-        basis 0 0 0 & 
-        basis 0.5 0.5 0.5 & 
-        basis 0.0 0.5 0.5 & 
-        basis 0.5 0.0 0.5 & 
-        basis 0.5 0.5 0.0
+
+lattice custom 1 &
+        orient x 114 -1 0 orient y 1 114 0 orient z 0 0 1 &
+        a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
+        basis 0 0 0 &
+        basis 0.5 0.5 0.5 &
+        basis 0.0 0.5 0.5 &
+        basis 0.5 0.0 0.5 &
+        basis 0.5 0.5 0.0 
+                           
 create_atoms 1 region lower &
-               basis 1 1 & 
-               basis 2 2 & 
-               basis 3 3 & 
-               basis 4 3 & 
+               basis 1 1 &
+               basis 2 2 &
+               basis 3 3 &
+               basis 4 3 &
                basis 5 3
 
-# Create upper region
 region upper block INF INF ${ycenter} ${ymax} INF INF units box
-lattice custom 1 orient x 1 0 0 orient y 0 1 0 orient z 0 0 1 & 
-        a1 ${latparam} 0 0 & 
-        a2 0 ${latparam} 0 & 
-        a3 0 0 ${latparam} & 
-        basis 0 0 0 & 
-        basis 0.5 0.5 0.5 & 
-        basis 0.0 0.5 0.5 & 
-        basis 0.5 0.0 0.5 & 
+ 
+lattice custom 1 &
+        orient x 114 1 0 orient y -1 114 0 orient z 0 0 1 &
+        a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
+        basis 0 0 0 &
+        basis 0.5 0.5 0.5 &
+        basis 0.0 0.5 0.5 &
+        basis 0.5 0.0 0.5 &
         basis 0.5 0.5 0.0
+ 
 create_atoms 1 region upper &
-               basis 1 1 & 
-               basis 2 2 & 
-               basis 3 3 & 
-               basis 4 3 & 
+               basis 1 1 &
+               basis 2 2 &
+               basis 3 3 &
+               basis 4 3 &
                basis 5 3
 
 # Group regions
