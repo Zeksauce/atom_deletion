@@ -21,7 +21,7 @@ variable cutoff equal 1.25
 variable angle equal 0.34
 
 # read data
-read_data  SrTiO3_1_0.data #../../../initial_structure/additional_data/SrTiO3_2_0.34.data 
+read_data  SrTiO3_0.5_0.txt #../../../initial_structure/additional_data/SrTiO3_2_0.34.data 
 
 mass 1 87.62000000    # Sr
 mass 2 47.86700000    # Ti 
