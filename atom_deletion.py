@@ -37,9 +37,7 @@ degree_4 = (
     ]
 )
 
-# run = [degree_1, degree_2, degree_4]
-run = [degree_4]
-
+run = [degree_1, degree_2, degree_4]
 
 if __name__ == "__main__":
     for degree in run:

@@ -1,9 +1,21 @@
+# input file for producing initial structure without relaxation
+
+# initial settings
+units metal
+dimension 3
+boundary p p p
+atom_style charge
+# atom_modify map array 
+
+# variable size equal 20         # model size
+# variable latparam equal 3.50   # initial lattice parameter
+
 # variables
 variable latparam equal 3.945
 variable scale equal sqrt(145)
-variable nx equal 8		# keep same x length
-variable ny equal 1		# changed from 3
-variable nz equal 4		# z thickness to 4
+variable nx equal 5		
+variable ny equal 1		
+variable nz equal 2		
 
 variable xmin equal 0
 variable xmax equal "v_nx*v_scale*v_latparam"
@@ -13,11 +25,12 @@ variable zmin equal 0
 variable zmax equal "v_nz*v_latparam"
 
 variable xcenter equal "(v_xmin+v_xmax)/2"
-variable ycenter equal "(v_ymin+v_ymax)/2"       # Updated ycenter
+variable ycenter equal 0
 variable zcenter equal "(v_zmin+v_zmax)/2"
 
 variable disp_x equal "v_latparam*v_scale*0.0"
 variable disp_z equal "v_latparam*0.0"
+# print "${disp}"
 
 region whole block ${xmin} ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box 
 create_box 3 whole 
