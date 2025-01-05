@@ -13,19 +13,19 @@ atom_style charge
 # variables
 variable latparam equal 3.945
 variable scale equal sqrt(145)
-variable nx equal 8
+variable nx equal 5
 variable ny equal 1
-variable nz equal 4
+variable nz equal 2
 
 variable xmin equal 0
 variable xmax equal "v_nx*v_scale*v_latparam"
-variable ymin equal "-v_ny*v_scale*v_latparam"
+variable ymin equal "-3*v_ny*v_scale*v_latparam"
 variable ymax equal "v_ny*v_scale*v_latparam"
 variable zmin equal 0 
 variable zmax equal "v_nz*v_latparam"
 
 variable xcenter equal "(v_xmin+v_xmax)/2"
-variable ycenter equal "(v_ymin+v_ymax)/2"
+variable ycenter equal 0
 variable zcenter equal "(v_zmin+v_zmax)/2"
 
 variable disp_x equal "v_latparam*v_scale*0.0"
