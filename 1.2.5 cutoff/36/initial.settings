@@ -19,7 +19,7 @@ variable nz equal 2
 
 variable xmin equal 0
 variable xmax equal "v_nx*v_scale*v_latparam"
-variable ymin equal "-3*v_ny*v_scale*v_latparam"
+variable ymin equal "-1*v_ny*v_scale*v_latparam"
 variable ymax equal "v_ny*v_scale*v_latparam"
 variable zmin equal 0 
 variable zmax equal "v_nz*v_latparam"
@@ -102,7 +102,7 @@ pair_style lj/cut 2.5
 pair_coeff * * 1 1
 
 # delete overlap atoms
-variable cutoff equal 4.0 # <cutoff>
+variable cutoff equal 0.5 # <cutoff>
 delete_atoms overlap ${cutoff} lower upper
 
 # reset ion charges
