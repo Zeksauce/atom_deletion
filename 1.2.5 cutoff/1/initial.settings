@@ -19,7 +19,7 @@ variable nz equal 2
 
 variable xmin equal 0
 variable xmax equal "v_nx*v_scale*v_latparam"
-variable ymin equal "-3*v_ny*v_scale*v_latparam"  # Tripled ymin
+variable ymin equal "-1*v_ny*v_scale*v_latparam"  # Tripled ymin
 variable ymax equal "v_ny*v_scale*v_latparam"
 variable zmin equal 0 
 variable zmax equal "v_nz*v_latparam"

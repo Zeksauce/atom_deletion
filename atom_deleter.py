@@ -11,9 +11,9 @@ class AtomDeleter:
     def __init__(
         self,
         path=r"1.2.5 cutoff\1\SrTiO3_0.5_0.data",
-        output = r"1.2.5 cutoff\1\SrTiO3_0.5_0.txt",
-        degree = 1,
-        latparam = 3.945,
+        output=r"1.2.5 cutoff\1\SrTiO3_0.5_0.txt",
+        degree=1,
+        latparam=3.945,
     ):
         self.file = Path(path)
         self.output = Path(output)
@@ -47,24 +47,48 @@ class AtomDeleter:
         self.atom_data = self.atom_data.drop(columns=["index"])
         self.degree = degree
         self.latparam = latparam
+        self.y_max = 145 ** (1 / 2) * latparam
+        self.y_shift = 1 / 4
 
     def main(self):
         """Main execution sequence"""
         self.remove_atom_range()
+        self.shift_atoms()
         self.save()
 
     def remove_atom_range(self):
-        """Removes the range of atoms specified
-        """
+        """Removes the range of atoms specified"""
 
         atom_data = self.atom_data
         self.atom_data = atom_data[
             ~(
-                (atom_data["y"] > -(self.latparam / 2) * math.cos(self.degree * math.pi / 180))
-                & (atom_data["y"] < 0)
-                # & (atom_data["x"] > (self.latparam /2)) to preserve first column
+                (
+                    (
+                        atom_data["y"]
+                        > -(self.latparam / 2) * math.cos(self.degree * math.pi / 180)
+                    )
+                    & (atom_data["y"] < 0)
+                )
+                | (
+                    (
+                        atom_data["y"]
+                        > (
+                            atom_data["y"].max()
+                            - (self.latparam / 2) * math.cos(self.degree * math.pi / 180)
+                        )
+                    )
+                )
             )
         ]
+
+    def shift_atoms(self):
+        atom_data = self.atom_data
+        atom_data["y"] += self.y_max
+        shift = self.y_max * self.y_shift * 2
+        atom_data["y"] += shift
+        atom_data["y"] %= self.y_max * 2
+        atom_data["y"] -= self.y_max
+        self.atom_data = atom_data
 
     def save(self):
         """Modifies and formats back into a data file
