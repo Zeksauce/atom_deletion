@@ -14,8 +14,8 @@ atom_style charge
 variable latparam equal 3.945
 variable scale equal sqrt(145)
 variable nx equal 10		
-variable ny equal 1		
-variable nz equal 2		
+variable ny equal 3		
+variable nz equal 6		
 
 variable xmin equal 0
 variable xmax equal "v_nx*v_scale*v_latparam"
