@@ -1,7 +1,7 @@
 LAMMPS (19 Nov 2024)
 OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:99)
   using 1 OpenMP thread(s) per MPI task
-Loaded 1 plugins from C:\Users\zek\AppData\Local\LAMMPS 64-bit 19Nov2024\plugins
+Loaded 1 plugins from C:\Users\raven\AppData\Local\LAMMPS 64-bit 19Nov2024\plugins
 # input file for producing initial structure without relaxation
 
 # initial settings
@@ -16,13 +16,16 @@ atom_style charge
 
 # variables
 variable latparam equal 3.945
+variable degree equal 4
 variable scale equal sqrt(145)
-variable nx equal 5
-variable ny equal 1
-variable nz equal 2
+variable nx equal 2
+variable ny equal 3
+variable nz equal 6
+variable pi equal 3.14159265
+variable x_scale equal v_latparam/tan(v_degree/2*v_pi/180)
 
 variable xmin equal 0
-variable xmax equal "v_nx*v_scale*v_latparam"
+variable xmax equal "v_x_scale*v_nx + 2*v_latparam"
 variable ymin equal "-1*v_ny*v_scale*v_latparam"
 variable ymax equal "v_ny*v_scale*v_latparam"
 variable zmin equal 0
@@ -38,18 +41,18 @@ variable disp_z equal "v_latparam*0.0"
 
 region whole block ${xmin} ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box
 region whole block 0 ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box
-region whole block 0 237.520453066678 ${ymin} ${ymax} ${zmin} ${zmax} units box
-region whole block 0 237.520453066678 -47.5040906133356 ${ymax} ${zmin} ${zmax} units box
-region whole block 0 237.520453066678 -47.5040906133356 47.5040906133356 ${zmin} ${zmax} units box
-region whole block 0 237.520453066678 -47.5040906133356 47.5040906133356 0 ${zmax} units box
-region whole block 0 237.520453066678 -47.5040906133356 47.5040906133356 0 7.89 units box
+region whole block 0 233.830038660588 ${ymin} ${ymax} ${zmin} ${zmax} units box
+region whole block 0 233.830038660588 -142.512271840007 ${ymax} ${zmin} ${zmax} units box
+region whole block 0 233.830038660588 -142.512271840007 142.512271840007 ${zmin} ${zmax} units box
+region whole block 0 233.830038660588 -142.512271840007 142.512271840007 0 ${zmax} units box
+region whole block 0 233.830038660588 -142.512271840007 142.512271840007 0 23.67 units box
 create_box 3 whole
-Created orthogonal box = (0 -47.504091 0) to (237.52045 47.504091 7.89)
+Created orthogonal box = (0 -142.51227 0) to (233.83004 142.51227 23.67)
   1 by 1 by 1 MPI processor grid
 
 region lower block INF INF ${ymin} ${ycenter} INF INF units box
-region lower block INF INF -47.5040906133356 ${ycenter} INF INF units box
-region lower block INF INF -47.5040906133356 0 INF INF units box
+region lower block INF INF -142.512271840007 ${ycenter} INF INF units box
+region lower block INF INF -142.512271840007 0 INF INF units box
 
 lattice custom 1         orient x 200 -7 0 orient y 7 200 0 orient z 0 0 1         a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam}         basis 0 0 0         basis 0.5 0.5 0.5         basis 0.0 0.5 0.5         basis 0.5 0.0 0.5         basis 0.5 0.5 0.0
 lattice custom 1         orient x 200 -7 0 orient y 7 200 0 orient z 0 0 1         a1 3.945 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam}         basis 0 0 0         basis 0.5 0.5 0.5         basis 0.0 0.5 0.5         basis 0.5 0.0 0.5         basis 0.5 0.5 0.0
@@ -58,13 +61,13 @@ lattice custom 1         orient x 200 -7 0 orient y 7 200 0 orient z 0 0 1      
 Lattice spacing in x,y,z = 4.0805764 4.0805764 3.945
 
 create_atoms 1 region lower                basis 1 1                basis 2 2                basis 3 3                basis 4 3                basis 5 3
-Created 7250 atoms
-  using lattice units in orthogonal box = (0 -47.504091 0) to (237.52045 47.504091 7.89)
-  create_atoms CPU = 0.002 seconds
+Created 64260 atoms
+  using lattice units in orthogonal box = (0 -142.51227 0) to (233.83004 142.51227 23.67)
+  create_atoms CPU = 0.005 seconds
 
 region upper block INF INF ${ycenter} ${ymax} INF INF units box
 region upper block INF INF 0 ${ymax} INF INF units box
-region upper block INF INF 0 47.5040906133356 INF INF units box
+region upper block INF INF 0 142.512271840007 INF INF units box
 
 lattice custom 1         orient x 200 7 0 orient y -7 200 0 orient z 0 0 1         a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam}         basis 0 0 0         basis 0.5 0.5 0.5         basis 0.0 0.5 0.5         basis 0.5 0.0 0.5         basis 0.5 0.5 0.0
 lattice custom 1         orient x 200 7 0 orient y -7 200 0 orient z 0 0 1         a1 3.945 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam}         basis 0 0 0         basis 0.5 0.5 0.5         basis 0.0 0.5 0.5         basis 0.5 0.0 0.5         basis 0.5 0.5 0.0
@@ -73,16 +76,16 @@ lattice custom 1         orient x 200 7 0 orient y -7 200 0 orient z 0 0 1      
 Lattice spacing in x,y,z = 4.0805764 4.0805764 3.945
 
 create_atoms 1 region upper                basis 1 1                basis 2 2                basis 3 3                basis 4 3                basis 5 3
-Created 7250 atoms
-  using lattice units in orthogonal box = (0 -47.504091 0) to (237.52045 47.504091 7.89)
-  create_atoms CPU = 0.002 seconds
+Created 64260 atoms
+  using lattice units in orthogonal box = (0 -142.51227 0) to (233.83004 142.51227 23.67)
+  create_atoms CPU = 0.006 seconds
 
 # substitute one type of atom with another type of atom, can be used to create multi-components system
 
 group lower region lower
-7252 atoms in group lower
+64266 atoms in group lower
 group upper region upper
-7252 atoms in group upper
+64266 atoms in group upper
 
 displace_atoms lower move ${disp_x} 0 0 units box
 displace_atoms lower move 0 0 0 units box
@@ -94,16 +97,16 @@ Displacing atoms ...
 # rotate around y axis
 variable angle equal 0 # <angle>
 displace_atoms lower rotate ${xcenter} ${ycenter} ${zcenter} 0 1 0 ${angle} # 0.34
-displace_atoms lower rotate 118.760226533339 ${ycenter} ${zcenter} 0 1 0 ${angle} 
-displace_atoms lower rotate 118.760226533339 0 ${zcenter} 0 1 0 ${angle} 
-displace_atoms lower rotate 118.760226533339 0 3.945 0 1 0 ${angle} 
-displace_atoms lower rotate 118.760226533339 0 3.945 0 1 0 0 
+displace_atoms lower rotate 116.915019330294 ${ycenter} ${zcenter} 0 1 0 ${angle} 
+displace_atoms lower rotate 116.915019330294 0 ${zcenter} 0 1 0 ${angle} 
+displace_atoms lower rotate 116.915019330294 0 11.835 0 1 0 ${angle} 
+displace_atoms lower rotate 116.915019330294 0 11.835 0 1 0 0 
 Displacing atoms ...
 displace_atoms upper rotate ${xcenter} ${ycenter} ${zcenter} 0 1 0 -${angle}
-displace_atoms upper rotate 118.760226533339 ${ycenter} ${zcenter} 0 1 0 -${angle}
-displace_atoms upper rotate 118.760226533339 0 ${zcenter} 0 1 0 -${angle}
-displace_atoms upper rotate 118.760226533339 0 3.945 0 1 0 -${angle}
-displace_atoms upper rotate 118.760226533339 0 3.945 0 1 0 -0
+displace_atoms upper rotate 116.915019330294 ${ycenter} ${zcenter} 0 1 0 -${angle}
+displace_atoms upper rotate 116.915019330294 0 ${zcenter} 0 1 0 -${angle}
+displace_atoms upper rotate 116.915019330294 0 11.835 0 1 0 -${angle}
+displace_atoms upper rotate 116.915019330294 0 11.835 0 1 0 -0
 Displacing atoms ...
 
 # read data
@@ -116,13 +119,13 @@ mass 3 15.99900000    # O
 
 set type 1 charge 1.2
 Setting atom values ...
-  2912 settings made for charge
+  25764 settings made for charge
 set type 2 charge 2.4
 Setting atom values ...
-  2892 settings made for charge
+  25668 settings made for charge
 set type 3 charge -1.2
 Setting atom values ...
-  8696 settings made for charge
+  77088 settings made for charge
 
 # potential settings (required but not important)
 
@@ -140,7 +143,7 @@ Neighbor list info ...
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 4.5
   ghost atom cutoff = 4.5
-  binsize = 2.25, bins = 106 43 4
+  binsize = 2.25, bins = 104 127 11
   2 neighbor lists, perpetual/occasional/extra = 1 1 0
   (1) command delete_atoms, occasional
       attributes: full, newton on
@@ -152,13 +155,13 @@ Neighbor list info ...
       pair build: half/bin/atomonly/newton
       stencil: half/bin/3d
       bin: standard
-Deleted 80 atoms, new total = 14420
+Deleted 222 atoms, new total = 128298
 
 # reset ion charges
 group negative type 3
-8650 atoms in group negative
+76962 atoms in group negative
 group positive subtract all negative
-5770 atoms in group positive
+51336 atoms in group positive
 variable totalCharge equal charge(all)
 variable numofpositive equal count(positive)
 variable numofnegative equal count(negative)
@@ -171,35 +174,35 @@ variable charge3 equal "-1.2-v_negativeCharge"
 print "----------charge information------------"
 ----------charge information------------
 print "total charge is now ${totalCharge}"
-total charge is now -4.8
+total charge is now 1.02140518265514e-14
 print "positive charge is now ${positiveCharge}"
-positive charge is now -0.000415944540727903
+positive charge is now 9.94823498768058e-20
 print "negative charge is now ${negativeCharge}"
-negative charge is now -0.000277456647398844
+negative charge is now 6.6357759846102e-20
 print "charge1 is now ${charge1}"
-charge1 is now 1.20041594454073
+charge1 is now 1.2
 print "charge2 is now ${charge2}"
-charge2 is now 2.40041594454073
+charge2 is now 2.4
 print "charge3 is now ${charge3}"
-charge3 is now -1.1997225433526
+charge3 is now -1.2
 
 variable num_of_atoms equal count(all)
 
 print "${cutoff} ${charge1} ${charge2} ${charge3} ${num_of_atoms}" append charge.txt
-0.5 1.20041594454073 2.40041594454073 -1.1997225433526 14420
+0.5 1.2 2.4 -1.2 128298
 
 set type 1 charge ${charge1}
-set type 1 charge 1.20041594454073
+set type 1 charge 1.2
 Setting atom values ...
-  2894 settings made for charge
+  25710 settings made for charge
 set type 2 charge ${charge2}
-set type 2 charge 2.40031163401206
+set type 2 charge 2.4
 Setting atom values ...
-  2876 settings made for charge
+  25626 settings made for charge
 set type 3 charge ${charge3}
-set type 3 charge -1.1998439308046
+set type 3 charge -1.2
 Setting atom values ...
-  8650 settings made for charge
+  76962 settings made for charge
 
 write_data SrTiO3_${cutoff}_${angle}.data nocoeff
 write_data SrTiO3_0.5_${angle}.data nocoeff
@@ -211,7 +214,7 @@ Neighbor list info ...
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 4.5
   ghost atom cutoff = 4.5
-  binsize = 2.25, bins = 106 43 4
+  binsize = 2.25, bins = 104 127 11
   1 neighbor lists, perpetual/occasional/extra = 1 0 0
   (1) pair lj/cut, perpetual
       attributes: half, newton on

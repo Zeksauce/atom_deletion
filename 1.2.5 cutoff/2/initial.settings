@@ -12,13 +12,16 @@ atom_style charge
 
 # variables
 variable latparam equal 3.945
+variable degree equal 2
 variable scale equal sqrt(145)
-variable nx equal 5
-variable ny equal 1
-variable nz equal 2
+variable nx equal 1		# Changed to 1 for degrees 1 and 2
+variable ny equal 3		
+variable nz equal 6
+variable pi equal 3.14159265
+variable x_scale equal v_latparam/tan(v_degree/2*v_pi/180)	
 
 variable xmin equal 0
-variable xmax equal "v_nx*v_scale*v_latparam"
+variable xmax equal "v_x_scale*v_nx + 2*v_latparam"
 variable ymin equal "-1*v_ny*v_scale*v_latparam"
 variable ymax equal "v_ny*v_scale*v_latparam"
 variable zmin equal 0 

@@ -1,15 +1,8 @@
-LAMMPS (17 Apr 2024)
-OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+LAMMPS (19 Nov 2024)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:99)
   using 1 OpenMP thread(s) per MPI task
-<<<<<<< HEAD
-Open of file C:\Users\PanGroupWorkstation\Desktop\LAMMPS USER-REBOMOS Plugin 15Jun2023-MSMPI\rebomosplugin.so failed: 
-Loaded 0 plugins from C:\Users\PanGroupWorkstation\Desktop\LAMMPS USER-REBOMOS Plugin 15Jun2023-MSMPI
-Loaded 1 plugins from C:\Users\PanGroupWorkstation\AppData\Local\LAMMPS 64-bit 17Apr2024\plugins
-# input file for producing initial structure
-=======
-Loaded 1 plugins from C:\Users\zek\AppData\Local\LAMMPS 64-bit 19Nov2024\plugins
+Loaded 1 plugins from C:\Users\raven\AppData\Local\LAMMPS 64-bit 19Nov2024\plugins
 # input file for producing initial structure without relaxation
->>>>>>> 4943d3ffc8d788a04e2a9132d0b9016a9ec847b3
 
 # initial settings
 units metal
@@ -21,26 +14,18 @@ atom_style charge
 # variable size equal 20         # model size
 # variable latparam equal 3.50   # initial lattice parameter
 
-<<<<<<< HEAD
-# lattice         fcc ${latparam}
-# region          box block 0 ${size} 0 ${size} 0 ${size}
-# create_box      3 box
-# create_atoms    1 box
-# substitute one type of atom with another type of atom, can be used to create multi-components system
-
-# variables
-variable cutoff equal 1.25
-variable angle equal 0.34
-=======
 # variables
 variable latparam equal 3.945
+variable degree equal 6
 variable scale equal sqrt(145)
-variable nx equal 5
-variable ny equal 1
-variable nz equal 2
+variable nx equal 2
+variable ny equal 3
+variable nz equal 6
+variable pi equal 3.14159265
+variable x_scale equal v_latparam/tan(v_degree/2*v_pi/180)
 
 variable xmin equal 0
-variable xmax equal "v_nx*v_scale*v_latparam"
+variable xmax equal "v_x_scale*v_nx + 2*v_latparam"
 variable ymin equal "-1*v_ny*v_scale*v_latparam"
 variable ymax equal "v_ny*v_scale*v_latparam"
 variable zmin equal 0
@@ -56,18 +41,18 @@ variable disp_z equal "v_latparam*0.0"
 
 region whole block ${xmin} ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box
 region whole block 0 ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box
-region whole block 0 237.520453066678 ${ymin} ${ymax} ${zmin} ${zmax} units box
-region whole block 0 237.520453066678 -47.5040906133356 ${ymax} ${zmin} ${zmax} units box
-region whole block 0 237.520453066678 -47.5040906133356 47.5040906133356 ${zmin} ${zmax} units box
-region whole block 0 237.520453066678 -47.5040906133356 47.5040906133356 0 ${zmax} units box
-region whole block 0 237.520453066678 -47.5040906133356 47.5040906133356 0 7.89 units box
+region whole block 0 158.440168638519 ${ymin} ${ymax} ${zmin} ${zmax} units box
+region whole block 0 158.440168638519 -142.512271840007 ${ymax} ${zmin} ${zmax} units box
+region whole block 0 158.440168638519 -142.512271840007 142.512271840007 ${zmin} ${zmax} units box
+region whole block 0 158.440168638519 -142.512271840007 142.512271840007 0 ${zmax} units box
+region whole block 0 158.440168638519 -142.512271840007 142.512271840007 0 23.67 units box
 create_box 3 whole
-Created orthogonal box = (0 -47.504091 0) to (237.52045 47.504091 7.89)
+Created orthogonal box = (0 -142.51227 0) to (158.44017 142.51227 23.67)
   1 by 1 by 1 MPI processor grid
 
 region lower block INF INF ${ymin} ${ycenter} INF INF units box
-region lower block INF INF -47.5040906133356 ${ycenter} INF INF units box
-region lower block INF INF -47.5040906133356 0 INF INF units box
+region lower block INF INF -142.512271840007 ${ycenter} INF INF units box
+region lower block INF INF -142.512271840007 0 INF INF units box
 
 lattice custom 1         orient x 210 -11 0 orient y 11 210 0 orient z 0 0 1         a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam}         basis 0 0 0         basis 0.5 0.5 0.5         basis 0.0 0.5 0.5         basis 0.5 0.0 0.5         basis 0.5 0.5 0.0
 lattice custom 1         orient x 210 -11 0 orient y 11 210 0 orient z 0 0 1         a1 3.945 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam}         basis 0 0 0         basis 0.5 0.5 0.5         basis 0.0 0.5 0.5         basis 0.5 0.0 0.5         basis 0.5 0.5 0.0
@@ -76,13 +61,13 @@ lattice custom 1         orient x 210 -11 0 orient y 11 210 0 orient z 0 0 1    
 Lattice spacing in x,y,z = 4.145959 4.145959 3.945
 
 create_atoms 1 region lower                basis 1 1                basis 2 2                basis 3 3                basis 4 3                basis 5 3
-Created 7262 atoms
-  using lattice units in orthogonal box = (0 -47.504091 0) to (237.52045 47.504091 7.89)
-  create_atoms CPU = 0.002 seconds
+Created 43542 atoms
+  using lattice units in orthogonal box = (0 -142.51227 0) to (158.44017 142.51227 23.67)
+  create_atoms CPU = 0.003 seconds
 
 region upper block INF INF ${ycenter} ${ymax} INF INF units box
 region upper block INF INF 0 ${ymax} INF INF units box
-region upper block INF INF 0 47.5040906133356 INF INF units box
+region upper block INF INF 0 142.512271840007 INF INF units box
 
 lattice custom 1         orient x 210 11 0 orient y -11 210 0 orient z 0 0 1         a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam}         basis 0 0 0         basis 0.5 0.5 0.5         basis 0.0 0.5 0.5         basis 0.5 0.0 0.5         basis 0.5 0.5 0.0
 lattice custom 1         orient x 210 11 0 orient y -11 210 0 orient z 0 0 1         a1 3.945 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam}         basis 0 0 0         basis 0.5 0.5 0.5         basis 0.0 0.5 0.5         basis 0.5 0.0 0.5         basis 0.5 0.5 0.0
@@ -91,16 +76,16 @@ lattice custom 1         orient x 210 11 0 orient y -11 210 0 orient z 0 0 1    
 Lattice spacing in x,y,z = 4.145959 4.145959 3.945
 
 create_atoms 1 region upper                basis 1 1                basis 2 2                basis 3 3                basis 4 3                basis 5 3
-Created 7262 atoms
-  using lattice units in orthogonal box = (0 -47.504091 0) to (237.52045 47.504091 7.89)
-  create_atoms CPU = 0.002 seconds
+Created 43542 atoms
+  using lattice units in orthogonal box = (0 -142.51227 0) to (158.44017 142.51227 23.67)
+  create_atoms CPU = 0.004 seconds
 
 # substitute one type of atom with another type of atom, can be used to create multi-components system
 
 group lower region lower
-7264 atoms in group lower
+43548 atoms in group lower
 group upper region upper
-7264 atoms in group upper
+43548 atoms in group upper
 
 displace_atoms lower move ${disp_x} 0 0 units box
 displace_atoms lower move 0 0 0 units box
@@ -112,83 +97,42 @@ Displacing atoms ...
 # rotate around y axis
 variable angle equal 0 # <angle>
 displace_atoms lower rotate ${xcenter} ${ycenter} ${zcenter} 0 1 0 ${angle} # 0.34
-displace_atoms lower rotate 118.760226533339 ${ycenter} ${zcenter} 0 1 0 ${angle} 
-displace_atoms lower rotate 118.760226533339 0 ${zcenter} 0 1 0 ${angle} 
-displace_atoms lower rotate 118.760226533339 0 3.945 0 1 0 ${angle} 
-displace_atoms lower rotate 118.760226533339 0 3.945 0 1 0 0 
+displace_atoms lower rotate 79.2200843192595 ${ycenter} ${zcenter} 0 1 0 ${angle} 
+displace_atoms lower rotate 79.2200843192595 0 ${zcenter} 0 1 0 ${angle} 
+displace_atoms lower rotate 79.2200843192595 0 11.835 0 1 0 ${angle} 
+displace_atoms lower rotate 79.2200843192595 0 11.835 0 1 0 0 
 Displacing atoms ...
 displace_atoms upper rotate ${xcenter} ${ycenter} ${zcenter} 0 1 0 -${angle}
-displace_atoms upper rotate 118.760226533339 ${ycenter} ${zcenter} 0 1 0 -${angle}
-displace_atoms upper rotate 118.760226533339 0 ${zcenter} 0 1 0 -${angle}
-displace_atoms upper rotate 118.760226533339 0 3.945 0 1 0 -${angle}
-displace_atoms upper rotate 118.760226533339 0 3.945 0 1 0 -0
+displace_atoms upper rotate 79.2200843192595 ${ycenter} ${zcenter} 0 1 0 -${angle}
+displace_atoms upper rotate 79.2200843192595 0 ${zcenter} 0 1 0 -${angle}
+displace_atoms upper rotate 79.2200843192595 0 11.835 0 1 0 -${angle}
+displace_atoms upper rotate 79.2200843192595 0 11.835 0 1 0 -0
 Displacing atoms ...
->>>>>>> 4943d3ffc8d788a04e2a9132d0b9016a9ec847b3
 
 # read data
-read_data  SrTiO3_0.5_0.txt #../../../initial_structure/additional_data/SrTiO3_2_0.34.data
-Reading data file ...
-  orthogonal box = (0 -142.51227 0) to (237.52045 47.504091 7.89)
-  1 by 1 by 1 MPI processor grid
-  reading atoms ...
-  28712 atoms
-  read_data CPU = 0.261 seconds
+# read_data ../../model/bicrystal.lmp
+# read_data SrTiO3_npt.data
 
 mass 1 87.62000000    # Sr
 mass 2 47.86700000    # Ti
 mass 3 15.99900000    # O
 
-<<<<<<< HEAD
-# set type 1 charge <Sr_charge>
-# set type 2 charge <Ti_charge>
-# set type 3 charge <O_charge>
-=======
 set type 1 charge 1.2
 Setting atom values ...
-  2908 settings made for charge
+  17436 settings made for charge
 set type 2 charge 2.4
 Setting atom values ...
-  2904 settings made for charge
+  17424 settings made for charge
 set type 3 charge -1.2
 Setting atom values ...
-  8712 settings made for charge
->>>>>>> 4943d3ffc8d788a04e2a9132d0b9016a9ec847b3
+  52224 settings made for charge
 
-# potential setting
+# potential settings (required but not important)
 
-variable lj_cut equal 2.50
-variable coul_cut equal 4.50
-variable morse_cut equal 4.50
-
-pair_style hybrid/overlay lj/long/coul/long off long ${lj_cut} ${coul_cut} morse ${morse_cut}
-pair_style hybrid/overlay lj/long/coul/long off long 2.5 ${coul_cut} morse ${morse_cut}
-pair_style hybrid/overlay lj/long/coul/long off long 2.5 4.5 morse ${morse_cut}
-pair_style hybrid/overlay lj/long/coul/long off long 2.5 4.5 morse 4.5
-kspace_style pppm/disp 1e-5
-
-# pair_coeff * * lj/long/coul/long 0.00 0
-pair_coeff 1 3 lj/long/coul/long 0.75 1
-pair_coeff 2 3 lj/long/coul/long 0.25 1
-pair_coeff 3 3 lj/long/coul/long 5.50 1
-
-pair_coeff * * morse 0.00 0.00 0.00
-pair_coeff 1 3 morse 0.019623 1.886000 3.328330
-pair_coeff 2 3 morse 0.024235 2.254703 2.708943
-pair_coeff 3 3 morse 0.042395 1.379316 3.618701
+pair_style lj/cut 2.5
+pair_coeff * * 1 1
 
 # delete overlap atoms
-<<<<<<< HEAD
-#variable cutoff equal 1.8
-#delete_atoms overlap ${cutoff} all all
-
-compute peratom all pe/atom
-
-variable tcharge equal charge(all)
-print "total charge is now ${tcharge}"
-total charge is now -5.49065944644204
-
-# minimize energy
-=======
 variable cutoff equal 0.5 # <cutoff>
 delete_atoms overlap ${cutoff} lower upper
 delete_atoms overlap 0.5 lower upper
@@ -199,7 +143,7 @@ Neighbor list info ...
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 4.5
   ghost atom cutoff = 4.5
-  binsize = 2.25, bins = 106 43 4
+  binsize = 2.25, bins = 71 127 11
   2 neighbor lists, perpetual/occasional/extra = 1 1 0
   (1) command delete_atoms, occasional
       attributes: full, newton on
@@ -211,13 +155,13 @@ Neighbor list info ...
       pair build: half/bin/atomonly/newton
       stencil: half/bin/3d
       bin: standard
-Deleted 84 atoms, new total = 14440
+Deleted 180 atoms, new total = 86904
 
 # reset ion charges
 group negative type 3
-8668 atoms in group negative
+52134 atoms in group negative
 group positive subtract all negative
-5772 atoms in group positive
+34770 atoms in group positive
 variable totalCharge equal charge(all)
 variable numofpositive equal count(positive)
 variable numofnegative equal count(negative)
@@ -230,35 +174,35 @@ variable charge3 equal "-1.2-v_negativeCharge"
 print "----------charge information------------"
 ----------charge information------------
 print "total charge is now ${totalCharge}"
-total charge is now -11.9999999999959
+total charge is now 21.6000000000053
 print "positive charge is now ${positiveCharge}"
-positive charge is now -0.00103950103950068
+positive charge is now 0.000310612597066513
 print "negative charge is now ${negativeCharge}"
-negative charge is now -0.000692201199815176
+negative charge is now 0.00020715847623437
 print "charge1 is now ${charge1}"
-charge1 is now 1.2010395010395
+charge1 is now 1.19968938740293
 print "charge2 is now ${charge2}"
-charge2 is now 2.4010395010395
+charge2 is now 2.39968938740293
 print "charge3 is now ${charge3}"
-charge3 is now -1.19930779880018
+charge3 is now -1.20020715847623
 
 variable num_of_atoms equal count(all)
 
 print "${cutoff} ${charge1} ${charge2} ${charge3} ${num_of_atoms}" append charge.txt
-0.5 1.2010395010395 2.4010395010395 -1.19930779880018 14440
+0.5 1.19968938740293 2.39968938740293 -1.20020715847623 86904
 
 set type 1 charge ${charge1}
-set type 1 charge 1.2010395010395
+set type 1 charge 1.19968938740293
 Setting atom values ...
-  2886 settings made for charge
+  17388 settings made for charge
 set type 2 charge ${charge2}
-set type 2 charge 2.40077962577963
+set type 2 charge 2.39976705395223
 Setting atom values ...
-  2886 settings made for charge
+  17382 settings made for charge
 set type 3 charge ${charge3}
-set type 3 charge -1.1996106368251
+set type 3 charge -1.2001165266425
 Setting atom values ...
-  8668 settings made for charge
+  52134 settings made for charge
 
 write_data SrTiO3_${cutoff}_${angle}.data nocoeff
 write_data SrTiO3_0.5_${angle}.data nocoeff
@@ -270,7 +214,7 @@ Neighbor list info ...
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 4.5
   ghost atom cutoff = 4.5
-  binsize = 2.25, bins = 106 43 4
+  binsize = 2.25, bins = 71 127 11
   1 neighbor lists, perpetual/occasional/extra = 1 0 0
   (1) pair lj/cut, perpetual
       attributes: half, newton on
@@ -281,160 +225,5 @@ Neighbor list info ...
 # dump 1 all custom 20000 SrTiO3_min_1.8.dump.* id type q x y z
 # dump_modify 1 sort id
 # min_style cg
->>>>>>> 4943d3ffc8d788a04e2a9132d0b9016a9ec847b3
 # minimize  1e-25 1e-25 20000 20000
-thermo 100
-thermo_style custom step temp lx ly lz pe pxx pyy pzz press vol
-
-minimize 1e-25 1e-25 20000 20000
-PPPMDisp initialization ...
-WARNING: System is not charge neutral, net charge = -5.4906594 (src/kspace.cpp:327)
-Generated 0 of 3 mixed pair_coeff terms from geometric mixing rule
-  Coulomb G vector (1/distance)= 0.7463590940105314
-  Coulomb grid = 720 576 24
-  Coulomb stencil order = 5
-  Coulomb estimated absolute RMS force accuracy = 0.00015507725
-  Coulomb estimated relative force accuracy = 1.0769519e-05
-  using double precision FFTW3
-  3d grid and FFT values/proc = 15018395 9953280
-Generated 0 of 3 mixed pair_coeff terms from geometric mixing rule
-Neighbor list info ...
-  update: every = 1 steps, delay = 0 steps, check = yes
-  max neighbors/atom: 2000, page size: 100000
-  master list distance cutoff = 6.5
-  ghost atom cutoff = 6.5
-  binsize = 3.25, bins = 74 59 3
-  3 neighbor lists, perpetual/occasional/extra = 3 0 0
-  (1) pair morse, perpetual
-      attributes: half, newton on
-      pair build: half/bin/atomonly/newton
-      stencil: half/bin/3d
-      bin: standard
-  (2) pair lj/long/coul/long, perpetual, skip from (1)
-      attributes: half, newton on
-      pair build: skip
-      stencil: none
-      bin: none
-  (3) pair morse, perpetual, copy from (1)
-      attributes: half, newton on
-      pair build: copy
-      stencil: none
-      bin: none
-Per MPI rank memory allocation (min/avg/max) = 2343 | 2343 | 2343 Mbytes
-   Step          Temp            Lx             Ly             Lz           PotEng          Pxx            Pyy            Pzz           Press          Volume    
-         0   0              237.52045      190.01636      7.89          -321359.25      572551         644467.54     -5480.5749      403845.99      356097.58    
-       100   0              237.52045      190.01636      7.89          -348160.06      3387.026       1227.4631     -3822.6136      263.95854      356097.58    
-       200   0              237.52045      190.01636      7.89          -348208         1899.5435     -2183.4065     -5113.4179     -1799.0936      356097.58    
-       210   0              237.52045      190.01636      7.89          -348208.8       1829.184      -2246.4792     -5143.8571     -1853.7174      356097.58    
-Loop time of 959.476 on 1 procs for 210 steps with 28712 atoms
-
-99.8% CPU use with 1 MPI tasks x 1 OpenMP threads
-
-Minimization stats:
-  Stopping criterion = linesearch alpha is zero
-  Energy initial, next-to-last, final = 
-     -321359.245394607  -348208.800556412  -348208.800556412
-  Force two-norm initial, final = 70995.266 1.7797227
-  Force max component initial, final = 5414.8789 0.33154105
-  Final line search alpha, max atom move = 2.4289486e-09 8.0529618e-10
-  Iterations, force evaluations = 210 412
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 19.709     | 19.709     | 19.709     |   0.0 |  2.05
-Kspace  | 938.59     | 938.59     | 938.59     |   0.0 | 97.82
-Neigh   | 0.53027    | 0.53027    | 0.53027    |   0.0 |  0.06
-Comm    | 0.25915    | 0.25915    | 0.25915    |   0.0 |  0.03
-Output  | 0.001804   | 0.001804   | 0.001804   |   0.0 |  0.00
-Modify  | 0          | 0          | 0          |   0.0 |  0.00
-Other   |            | 0.3816     |            |       |  0.04
-
-Nlocal:          28712 ave       28712 max       28712 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:          61297 ave       61297 max       61297 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:    1.34065e+06 ave 1.34065e+06 max 1.34065e+06 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-
-Total # of neighbors = 1340648
-Ave neighs/atom = 46.692951
-Neighbor list builds = 11
-Dangerous builds = 0
-
-# relax box
-reset_timestep 0
-fix 1 all box/relax aniso 0.0 vmax 0.001
-# fix 1 all box/relax aniso 0.0 vmax 0.001 fixedpoint 0 0 0
-# fix 1 all box/relax y 0.0 vmax 0.001
-#dump 1 all custom 20000 SrTiO3_min.dump.* id type q x y z c_peratom
-#dump_modify 1 sort id
-min_style cg
-minimize  1e-25 1e-25 20000 20000
-PPPMDisp initialization ...
-Generated 0 of 3 mixed pair_coeff terms from geometric mixing rule
-  Coulomb G vector (1/distance)= 0.7463590940105314
-  Coulomb grid = 720 576 24
-  Coulomb stencil order = 5
-  Coulomb estimated absolute RMS force accuracy = 0.00015507725
-  Coulomb estimated relative force accuracy = 1.0769519e-05
-  using double precision FFTW3
-  3d grid and FFT values/proc = 15018395 9953280
-Generated 0 of 3 mixed pair_coeff terms from geometric mixing rule
-WARNING: Energy due to 3 extra global DOFs will be included in minimizer energies
- (src/min.cpp:219)
-Per MPI rank memory allocation (min/avg/max) = 2344 | 2344 | 2344 Mbytes
-   Step          Temp            Lx             Ly             Lz           PotEng          Pxx            Pyy            Pzz           Press          Volume    
-         0   0              237.52045      190.01636      7.89          -348208.8       1829.184      -2246.4792     -5143.8571     -1853.7174      356097.58    
-         5   0              238.1689       189.87285      7.8648119     -348210.94      141.90805      113.94384      131.35437      129.06875      355661.02    
-Loop time of 261.6 on 1 procs for 5 steps with 28712 atoms
-
-99.8% CPU use with 1 MPI tasks x 1 OpenMP threads
-
-Minimization stats:
-  Stopping criterion = linesearch alpha is zero
-  Energy initial, next-to-last, final = 
-     -348208.800556413   -348210.94449251   -348210.94449251
-  Force two-norm initial, final = 1312.1152 49.888606
-  Force max component initial, final = 1143.2667 31.415855
-  Final line search alpha, max atom move = 3.2121151e-12 1.0091134e-10
-  Iterations, force evaluations = 5 53
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 2.5722     | 2.5722     | 2.5722     |   0.0 |  0.98
-Kspace  | 118.28     | 118.28     | 118.28     |   0.0 | 45.22
-Neigh   | 0          | 0          | 0          |   0.0 |  0.00
-Comm    | 0.030797   | 0.030797   | 0.030797   |   0.0 |  0.01
-Output  | 0          | 0          | 0          |   0.0 |  0.00
-Modify  | 0          | 0          | 0          |   0.0 |  0.00
-Other   |            | 140.7      |            |       | 53.79
-
-Nlocal:          28712 ave       28712 max       28712 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:          61291 ave       61291 max       61291 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:    1.34072e+06 ave 1.34072e+06 max 1.34072e+06 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-
-Total # of neighbors = 1340718
-Ave neighs/atom = 46.695389
-Neighbor list builds = 0
-Dangerous builds = 0
-
-write_data SrTiO3_relaxed_${cutoff}_${angle}.data nocoeff
-write_data SrTiO3_relaxed_1.25_${angle}.data nocoeff
-write_data SrTiO3_relaxed_1.25_0.34.data nocoeff
-System init for write_data ...
-PPPMDisp initialization ...
-Generated 0 of 3 mixed pair_coeff terms from geometric mixing rule
-  Coulomb G vector (1/distance)= 0.7462225900300259
-  Coulomb grid = 720 576 24
-  Coulomb stencil order = 5
-  Coulomb estimated absolute RMS force accuracy = 0.00015528473
-  Coulomb estimated relative force accuracy = 1.0783928e-05
-  using double precision FFTW3
-  3d grid and FFT values/proc = 15018395 9953280
-Generated 0 of 3 mixed pair_coeff terms from geometric mixing rule
-Total wall time: 2:01:55
+Total wall time: 0:00:00
