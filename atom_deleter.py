@@ -47,7 +47,7 @@ class AtomDeleter:
         self.atom_data = self.atom_data.drop(columns=["index"])
         self.degree = degree
         self.latparam = latparam
-        self.y_max = 145 ** (1 / 2) * latparam
+        self.y_max = 145 ** (1 / 2) * latparam * 3
         self.y_shift = 1 / 4
 
     def main(self):
