@@ -48,11 +48,13 @@ class AtomDeleter:
         self.degree = degree
         self.latparam = latparam
         self.y_max = 145 ** (1 / 2) * latparam * 3
-        self.y_shift = 1 / 4
+        self.y_shift = 1 / 2
 
     def main(self):
         """Main execution sequence"""
         self.remove_atom_range()
+        self.shift_atoms()
+        self.remove_atom_range_bottom()
         self.shift_atoms()
         self.save()
 
@@ -69,15 +71,20 @@ class AtomDeleter:
                     )
                     & (atom_data["y"] < 0)
                 )
-                | (
-                    (
-                        atom_data["y"]
-                        > (
-                            atom_data["y"].max()
-                            - (self.latparam / 2) * math.cos(self.degree * math.pi / 180)
-                        )
-                    )
+            )
+        ]
+
+    def remove_atom_range_bottom(self):
+        """Removes the range of atoms specified"""
+
+        atom_data = self.atom_data
+        self.atom_data = atom_data[
+            ~(
+                (
+                    atom_data["y"]
+                    < (self.latparam / 2) * math.cos(self.degree * math.pi / 180)
                 )
+                & (atom_data["y"] > 0)
             )
         ]
 
@@ -89,6 +96,7 @@ class AtomDeleter:
         atom_data["y"] %= self.y_max * 2
         atom_data["y"] -= self.y_max
         self.atom_data = atom_data
+        self.y_shift = 1/4
 
     def save(self):
         """Modifies and formats back into a data file

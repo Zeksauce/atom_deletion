@@ -47,8 +47,8 @@ degree_45 = (
     45,
 )
 
-run = [degree_1, degree_2, degree_4, degree_6, degree_10, degree_22, degree_36, degree_45]
-#run = [degree_1]
+#run = [degree_1, degree_2, degree_4, degree_6, degree_10, degree_22, degree_36, degree_45]
+run = [degree_1, degree_2, degree_4, degree_6, degree_10]
 if __name__ == "__main__":
     for degree in run:
         deleter = AtomDeleter(*degree)
