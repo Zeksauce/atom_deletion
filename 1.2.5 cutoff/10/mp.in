@@ -1,0 +1,97 @@
+# input file for the thermal conductivity calculation
+
+# --------------------------- initial setting --------------------------
+units metal
+dimension 3
+boundary p p p
+atom_style charge
+
+variable T equal 300
+variable dt equal 0.001
+
+# --------------------------- read data --------------------------
+read_data SrTiO3_relaxed_1.25_0.34.data
+
+mass 1 87.62000000    # Sr
+mass 2 47.86700000    # Ti 
+mass 3 15.99900000    # O 
+reset_atom_ids
+
+# --------------------------- potential setting --------------------------
+
+variable lj_cut equal 2.50
+variable coul_cut equal 4.50
+variable morse_cut equal 4.50
+
+pair_style hybrid/overlay lj/long/coul/long off long ${lj_cut} ${coul_cut} morse ${morse_cut}
+kspace_style pppm/disp 1e-5
+
+# pair_coeff * * lj/long/coul/long 0.00 0
+pair_coeff 1 3 lj/long/coul/long 0.75 1
+pair_coeff 2 3 lj/long/coul/long 0.25 1
+pair_coeff 3 3 lj/long/coul/long 5.50 1
+
+pair_coeff * * morse 0.00 0.00 0.00
+pair_coeff 1 3 morse 0.019623 1.886000 3.328330
+pair_coeff 2 3 morse 0.024235 2.254703 2.708943
+pair_coeff 3 3 morse 0.042395 1.379316 3.618701
+
+# ------------------- NEMD to caculate the thermal conductivity ---------------
+timestep     ${dt}
+velocity all create ${T} 87287 mom yes dist gaussian
+#fix NPT all npt temp ${T} ${T} 0.1 aniso 0.0 0.0 1.0
+fix cent all recenter INIT INIT INIT
+
+#thermo_style custom step temp pe etotal press vol
+#thermo 1000
+#run 10000
+
+#unfix NPT
+#write_data npt.data
+#write_restart npt.restart
+
+reset_timestep 0
+fix NPYH all nph y 0.0 0.0 1.0
+
+# create a temperature gradient, wait for equilibration
+compute      ke all ke/atom
+variable     kb equal 8.617330e-5  # Boltzman constant [eV / K]
+variable     cnst equal 1.5*${kb}
+variable     temp atom c_ke/${cnst}
+
+# Bin the atoms along the Y direction
+compute      IDchnk all chunk/atom bin/1d y lower 0.01 units reduced 
+
+# Compute the average temperature in each of the bins along Y direction, output to profile1.temp
+fix          avechnk1 all ave/chunk 10 100 1000 IDchnk v_temp norm sample file profile1.temp
+
+# Create the Temperature Gradient along Y direction by swapping hot/cold particles
+fix          CONDUCTIVITY all thermal/conductivity 100 y 100 swap 3
+
+# Print the Energy due to swapped particles through time(should be a stright line when equilibrated)
+thermo_style custom step time temp press f_CONDUCTIVITY etotal
+thermo       1000
+dump 1 all custom 100000 lammps.dump id mass type xs ys zs
+restart 100000 restart3ns.*
+
+run          3000000
+
+
+write_data 3ns.data
+write_restart 3ns.restart
+
+#reset_timestep 0
+# Compute the average temperature in each of the bins along Y direction, output to profile2.temp
+#unfix avechnk1
+
+#fix          avechnk2 all ave/chunk 10 100 1000 IDchnk v_temp norm sample file profile2.temp
+
+#thermo_style custom step time temp press f_CONDUCTIVITY etotal
+#thermo       1000
+#restart 100000 restart4fs.*
+
+#run          4000000
+
+
+#write_data 4fs.data
+#write_restart 4fs.restart
