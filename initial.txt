@@ -12,13 +12,17 @@ atom_style charge
 
 # variables
 variable latparam equal 3.945
-variable degree equal 45
+variable degree equal 10
 variable scale equal sqrt(145)
 variable nx equal 2
 variable ny equal 3		
 variable nz equal 6
 variable pi equal 3.14159265
-variable x_scale equal v_latparam/tan(v_degree/2*v_pi/180)	
+variable x_scale equal "v_latparam/tan(v_degree/2*v_pi/180)"	
+variable xcos equal "cos(v_degree/2*v_pi/180) * 1000"
+variable ysin equal "(sin(v_degree/2*v_pi/180)* 1000)"
+variable xhat equal "floor( v_xcos)"
+variable yhat equal "floor(v_ysin)"
 
 variable xmin equal 0
 variable xmax equal "v_x_scale*v_nx + 2*v_latparam"
@@ -26,7 +30,6 @@ variable ymin equal "-1*v_ny*v_scale*v_latparam"
 variable ymax equal "v_ny*v_scale*v_latparam"
 variable zmin equal 0 
 variable zmax equal "v_nz*v_latparam"
-
 
 variable xcenter equal "(v_xmin+v_xmax)/2"
 variable ycenter equal 0
@@ -42,7 +45,7 @@ create_box 3 whole
 region lower block INF INF ${ymin} ${ycenter} INF INF units box
 
 lattice custom 1 &
-        orient x 2 -1 0 orient y 1 2 0 orient z 0 0 1 &
+        orient x v_xhat -v_yhat 0 orient y v_yhat v_xhat 0 orient z 0 0 1 &
         a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
         basis 0 0 0 &
         basis 0.5 0.5 0.5 &
@@ -60,7 +63,7 @@ create_atoms 1 region lower &
 region upper block INF INF ${ycenter} ${ymax} INF INF units box
  
 lattice custom 1 &
-        orient x 2 1 0 orient y -1 2 0 orient z 0 0 1 &
+        orient x v_xhat v_yhat 0 orient y -v_yhat v_xhat 0 orient z 0 0 1 &
         a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
         basis 0 0 0 &
         basis 0.5 0.5 0.5 &
@@ -106,7 +109,7 @@ pair_style lj/cut 2.5
 pair_coeff * * 1 1
 
 # delete overlap atoms
-variable cutoff equal 0.0 # <cutoff>
+variable cutoff equal 0.5 # <cutoff>
 delete_atoms overlap ${cutoff} lower upper
 
 # reset ion charges

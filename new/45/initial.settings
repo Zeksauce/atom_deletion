@@ -5,26 +5,29 @@ units metal
 dimension 3
 boundary p p p
 atom_style charge
-# atom_modify map array 
+# atom_modify map array
 
-# variable size equal 20         # model size
-# variable latparam equal 3.50   # initial lattice parameter
+# variable size equal 20          # model size
+# variable latparam equal 3.50    # initial lattice parameter
 
 # variables
+variable n equal 1
 variable latparam equal 3.945
 variable degree equal 45
 variable scale equal sqrt(145)
 variable nx equal 2
-variable ny equal 3		
-variable nz equal 6
+variable ny equal 3
+variable nz equal 1
 variable pi equal 3.14159265
-variable x_scale equal v_latparam/tan(v_degree/2*v_pi/180)	
+# Corrected x_scale definition: now uses the formula you intended
+variable x_scale equal "2*v_latparam*sqrt(1 + ${n}^2)"
 
 variable xmin equal 0
-variable xmax equal "v_x_scale*v_nx + 2*v_latparam"
+# FIX: Correctly reference x_scale's value for xmax
+variable xmax equal "v_nx *v_latparam * sqrt(1 + v_n * v_n) + v_latparam"
 variable ymin equal "-1*v_ny*v_scale*v_latparam"
 variable ymax equal "v_ny*v_scale*v_latparam"
-variable zmin equal 0 
+variable zmin equal 0
 variable zmax equal "v_nz*v_latparam"
 
 
@@ -36,44 +39,47 @@ variable disp_x equal "v_latparam*v_scale*0.0"
 variable disp_z equal "v_latparam*0.0"
 # print "${disp}"
 
-region whole block ${xmin} ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box 
-create_box 3 whole 
+
+region whole block ${xmin} ${xmax} ${ymin} ${ymax} ${zmin} ${zmax} units box
+create_box 3 whole
 
 region lower block INF INF ${ymin} ${ycenter} INF INF units box
 
+# Corrected lattice custom commands to use ${n} for variable substitution
 lattice custom 1 &
-        orient x 2 -1 0 orient y 1 2 0 orient z 0 0 1 &
-        a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
-        basis 0 0 0 &
-        basis 0.5 0.5 0.5 &
-        basis 0.0 0.5 0.5 &
-        basis 0.5 0.0 0.5 &
-        basis 0.5 0.5 0.0 
-                           
-create_atoms 1 region lower &
-               basis 1 1 &
-               basis 2 2 &
-               basis 3 3 &
-               basis 4 3 &
-               basis 5 3
-
-region upper block INF INF ${ycenter} ${ymax} INF INF units box
- 
-lattice custom 1 &
-        orient x 2 1 0 orient y -1 2 0 orient z 0 0 1 &
+        orient x ${n} -1 0 orient y 1 ${n} 0 orient z 0 0 1 &
         a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
         basis 0 0 0 &
         basis 0.5 0.5 0.5 &
         basis 0.0 0.5 0.5 &
         basis 0.5 0.0 0.5 &
         basis 0.5 0.5 0.0
- 
+
+create_atoms 1 region lower &
+                basis 1 1 &
+                basis 2 2 &
+                basis 3 3 &
+                basis 4 3 &
+                basis 5 3
+
+region upper block INF INF ${ycenter} ${ymax} INF INF units box
+
+# Corrected lattice custom commands to use ${n} for variable substitution
+lattice custom 1 &
+        orient x ${n} 1 0 orient y -1 ${n} 0 orient z 0 0 1 &
+        a1 ${latparam} 0 0 a2 0 ${latparam} 0 a3 0 0 ${latparam} &
+        basis 0 0 0 &
+        basis 0.5 0.5 0.5 &
+        basis 0.0 0.5 0.5 &
+        basis 0.5 0.0 0.5 &
+        basis 0.5 0.5 0.0
+
 create_atoms 1 region upper &
-               basis 1 1 &
-               basis 2 2 &
-               basis 3 3 &
-               basis 4 3 &
-               basis 5 3
+                basis 1 1 &
+                basis 2 2 &
+                basis 3 3 &
+                basis 4 3 &
+                basis 5 3
 
 # substitute one type of atom with another type of atom, can be used to create multi-components system
 
@@ -92,9 +98,9 @@ displace_atoms upper rotate ${xcenter} ${ycenter} ${zcenter} 0 1 0 -${angle}
 # read_data ../../model/bicrystal.lmp
 # read_data SrTiO3_npt.data
 
-mass 1 87.62000000    # Sr
-mass 2 47.86700000    # Ti 
-mass 3 15.99900000    # O 
+mass 1 87.62000000     # Sr
+mass 2 47.86700000     # Ti
+mass 3 15.99900000     # O
 
 set type 1 charge 1.2
 set type 2 charge 2.4
