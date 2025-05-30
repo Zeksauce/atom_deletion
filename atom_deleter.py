@@ -10,9 +10,8 @@ class AtomDeleter:
 
     def __init__(
         self,
-        path=r"1.2.5 cutoff\1\SrTiO3_0.5_0.data",
-        output=r"1.2.5 cutoff\1\SrTiO3_0.5_0.txt",
-        degree=1,
+        path=r"new\1\SrTiO3_0.5_0.data",
+        output=r"new\1\SrTiO3_0.5_0.txt",
         latparam=3.945,
     ):
         self.file = Path(path)
@@ -45,7 +44,6 @@ class AtomDeleter:
             "z_velocity",
         ]
         self.atom_data = self.atom_data.drop(columns=["index"])
-        self.degree = degree
         self.latparam = latparam
         self.y_max = 145 ** (1 / 2) * latparam * 3
         self.y_shift = 1 / 2
@@ -67,7 +65,7 @@ class AtomDeleter:
                 (
                     (
                         atom_data["y"]
-                        > -(self.latparam / 2) * math.cos(self.degree * math.pi / 180)
+                        > -(self.latparam / 2.5) #* math.cos(self.degree * math.pi / 180)
                     )
                     & (atom_data["y"] < 0)
                 )
@@ -82,7 +80,7 @@ class AtomDeleter:
             ~(
                 (
                     atom_data["y"]
-                    < (self.latparam / 2) * math.cos(self.degree * math.pi / 180)
+                    < (self.latparam / 2) #* math.cos(self.degree * math.pi / 180)
                 )
                 & (atom_data["y"] > 0)
             )
