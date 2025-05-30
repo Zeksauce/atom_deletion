@@ -30,7 +30,7 @@ degree_26 = (
 #     r"new\45\SrTiO3_0_1.data",
 # )
 
-run = [degree_9, degree_11, degree_14, degree_18, degree_26, ]#degree_45]
+run = [degree_9, ]#degree_11, degree_14, degree_18, degree_26, ]#degree_45]
 if __name__ == "__main__":
     for degree in run:
         deleter = AtomDeleter(*degree)
