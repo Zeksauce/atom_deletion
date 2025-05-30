@@ -112,7 +112,7 @@ pair_style lj/cut 2.5
 pair_coeff * * 1 1
 
 # delete overlap atoms
-variable cutoff equal 0.0 # <cutoff>
+variable cutoff equal 0.1 # <cutoff>
 delete_atoms overlap ${cutoff} lower upper
 
 # reset ion charges
